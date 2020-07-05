@@ -1,21 +1,41 @@
 <idea-plugin>
-    <id>cn.xunyard.coding-helper</id>
-    <name>Coding Helper</name>
+    <!-- 插件id -->
+    <id>cn.xunyard.java-service-doc-plugin</id>
+    <!-- 插件名称 -->
+    <name>Java service document tools</name>
+    <!-- 开发者信息 -->
     <vendor email="xunyard@gmail.com" url="https://blog.xunyard.cn">xunyard</vendor>
-
-    <description><![CDATA[A tool for coding help such as service document building]]></description>
-
+    <!-- 插件说明 -->
+    <description>
+        <![CDATA[A tool for coding help such as service document building and i18n error code translate found and set]]>
+    </description>
     <depends>com.intellij.modules.platform</depends>
-
+    <depends>com.intellij.modules.java</depends>
+    <!-- 依赖的其他插件能力 -->
     <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="cn.xunyard.idea.coding.doc.DocumentBuilderSettings"/>
+        <projectService serviceImplementation="cn.xunyard.idea.coding.i18n.I18nInspectionSettings"/>
+        <localInspection language="JAVA"
+                         displayName="I18n: error code without target translate"
+                         groupPath="Java"
+                         groupBundle="messages.InspectionsBundle"
+                         groupKey="group.names.internationalization.issues"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="cn.xunyard.idea.coding.i18n.inspection.ErrorCodeWithoutTranslateInspection"
+        />
     </extensions>
-
+    <!-- 插件动作 -->
     <actions>
-        <group id="cn.xunyard.coding.GroupActions" text="Coding Helper" popup="true">
+        <group id="cn.xunyard.coding.GroupActions" text="Java service doc" popup="true">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
-
-            <action id="cn.xunyard.doc" class="cn.xunyard.idea.coding.doc.action.DocumentBuildingAction" text="Build Service Document"
+            <action id="cn.xunyard.doc" class="cn.xunyard.idea.coding.doc.action.DocumentBuildingAction"
+                    text="Build Service Document"
                     description="A simple tool for service document building.">
+            </action>
+            <action id="cn.xunyard.i18n" class="cn.xunyard.idea.coding.i18n.action.I18nSettingsAction"
+                    text="I18n Settings"
+                    description="A simple tool for error translate inspection of i18n.">
             </action>
         </group>
     </actions>

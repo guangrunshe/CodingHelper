@@ -3,6 +3,7 @@ package cn.xunyard.idea.coding.doc.logic.render;
 import cn.xunyard.idea.coding.doc.logic.describer.ClassDescriber;
 import cn.xunyard.idea.coding.doc.logic.describer.FieldDescriber;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -13,7 +14,7 @@ import java.util.HashSet;
  */
 public class ResponseRender extends AbstractClassRender {
 
-    public void renderParameter(FileWriter fileWriter, ClassDescriber classDescriber) throws IOException {
+    public void renderParameter(BufferedWriter fileWriter, ClassDescriber classDescriber) throws IOException {
         if (classDescriber == null) {
             fileWriter.write("\n```void```\n");
             return;
@@ -25,7 +26,7 @@ public class ResponseRender extends AbstractClassRender {
     }
 
     @Override
-    protected void renderParameterClassFields(FileWriter fileWriter, ClassDescriber classDescriber) throws IOException {
+    protected void renderParameterClassFields(BufferedWriter fileWriter, ClassDescriber classDescriber) throws IOException {
         if (classDescriber.hasFields()) {
             fileWriter.write("\n参数名|必选|类型|描述|说明\n---|---|---|---|---\n");
 

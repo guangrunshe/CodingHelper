@@ -5,6 +5,7 @@ import cn.xunyard.idea.coding.doc.logic.describer.FieldDescriber;
 import cn.xunyard.idea.coding.doc.logic.describer.ParameterizedClass;
 import cn.xunyard.idea.coding.util.ObjectUtils;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
@@ -15,7 +16,7 @@ import java.util.Set;
  */
 public abstract class AbstractClassRender {
 
-    protected void renderField(FileWriter fileWriter, FieldDescriber field) throws IOException {
+    protected void renderField(BufferedWriter fileWriter, FieldDescriber field) throws IOException {
         fileWriter.write(field.getName()
                 + "|" + (field.isRequired() ? "是" : "否")
                 + "|" + String.format("``` %s ```", field.toSimpleString())
@@ -35,7 +36,7 @@ public abstract class AbstractClassRender {
         return false;
     }
 
-    protected void renderClassBasic(FileWriter fileWriter, ClassDescriber classDescriber) throws IOException {
+    protected void renderClassBasic(BufferedWriter fileWriter, ClassDescriber classDescriber) throws IOException {
         fileWriter.write(String.format("\n``` %s ```\n", classDescriber.toSimpleString()));
 
         if (classDescriber.hasDescription()) {
@@ -47,7 +48,7 @@ public abstract class AbstractClassRender {
         }
     }
 
-    protected boolean renderClassBasicCore(FileWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
+    protected boolean renderClassBasicCore(BufferedWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
         if (canSkip(classDescriber, rendered) ||
                 classDescriber.isCycleReference() ||
                 classDescriber.isBasicType()) {
@@ -83,7 +84,7 @@ public abstract class AbstractClassRender {
         return false;
     }
 
-    protected void renderExtendClass(FileWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
+    protected void renderExtendClass(BufferedWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
         if (classDescriber.isCycleReference()) {
             return;
         }
@@ -101,7 +102,7 @@ public abstract class AbstractClassRender {
         }
     }
 
-    private void renderExtendClassCore(FileWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
+    private void renderExtendClassCore(BufferedWriter fileWriter, ClassDescriber classDescriber, Set<String> rendered) throws IOException {
         if (classDescriber.isCycleReference()) {
             return;
         }
@@ -121,5 +122,5 @@ public abstract class AbstractClassRender {
         renderExtendClass(fileWriter, classDescriber, rendered);
     }
 
-    protected abstract void renderParameterClassFields(FileWriter fileWriter, ClassDescriber classDescriber) throws IOException;
+    protected abstract void renderParameterClassFields(BufferedWriter fileWriter, ClassDescriber classDescriber) throws IOException;
 }

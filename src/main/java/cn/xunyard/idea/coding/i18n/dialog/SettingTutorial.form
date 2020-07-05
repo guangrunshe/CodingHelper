@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cn.xunyard.idea.coding.i18n.dialog.SettingTutorial">
+  <grid id="27dc6" binding="wholePanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="600" height="298"/>
+    </constraints>
+    <properties>
+      <maximumSize width="-1" height="-1"/>
+      <minimumSize width="-1" height="-1"/>
+      <opaque value="false"/>
+      <preferredSize width="500" height="500"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="621d" class="com.intellij.ui.components.JBLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&lt;html&gt;&lt;body&gt;&#10;错误码翻译检查，尝试解析代码中&quot;xx.yy&quot;类型的字符。如果字符中不存在指定语言的翻译内容，将以&lt;b&gt;警告级别&lt;/b&gt;提示相关代码。工具提供以下功能:&#10;&lt;li&gt;&lt;b&gt;·&lt;/b&gt; 查找、提醒缺少翻译的错误码&lt;/li&gt;&#10;&lt;li&gt;&lt;b&gt;·&lt;/b&gt; 快速添加错误码&lt;/li&gt;&#10;&lt;br&gt;&#10;&lt;h3&gt;功能开启路径&lt;/h3&gt;&#10;&lt;b&gt;Preferences&lt;/b&gt;-&gt;&lt;b&gt;Editor&lt;/b&gt;-&gt;&lt;b&gt;Inspections&lt;/b&gt;-&gt;&lt;b&gt;Java&lt;/b&gt;-&gt;&lt;b&gt;Internationalization&lt;/b&gt;&lt;br&gt;&#10;-&gt;&lt;b&gt;I18n: error code without target translate&lt;/b&gt;&#10;&lt;/body&gt;&lt;/html&gt;"/>
+        </properties>
+      </component>
+      <vspacer id="ede73">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="92db9" class="cn.xunyard.idea.coding.dialog.BindingListWithAdd" binding="selectTool" custom-create="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <minimum-size width="258" height="150"/>
+            <preferred-size width="258" height="250"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+    </children>
+  </grid>
+</form>

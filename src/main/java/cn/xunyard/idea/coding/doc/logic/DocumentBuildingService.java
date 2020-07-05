@@ -14,13 +14,13 @@ import java.util.concurrent.TimeUnit;
  * @date 2019-12-15
  */
 public class DocumentBuildingService {
-    private final Logger log = LoggerFactory.getLogger(DocConfig.IDENTITY);
-    private final DocConfig docConfig;
+    private final Logger log = LoggerFactory.getLogger(ProcessContext.IDENTITY);
+    private final DocumentBuilderConfiguration configuration;
     private final ThreadPoolExecutor THREAD_POOL = new ThreadPoolExecutor(1, 1, 1,
             TimeUnit.MINUTES, new LinkedBlockingDeque<>());
 
-    public DocumentBuildingService(DocConfig docConfig) {
-        this.docConfig = docConfig;
+    public DocumentBuildingService(DocumentBuilderConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public synchronized void run() {
@@ -30,11 +30,11 @@ public class DocumentBuildingService {
             return;
         }
 
-        ServiceAsyncProcessor processor = new ServiceAsyncProcessor(docConfig, ProjectUtils.getCurrentProject(), this::onDone);
+        ServiceAsyncProcessor processor = new ServiceAsyncProcessor(configuration, ProjectUtils.getCurrentProject(), this::onDone);
         THREAD_POOL.submit(processor);
     }
 
-    private void onDone(DocConfig docConfig) {
+    private void onDone(DocumentBuilderConfiguration configuration) {
         log.done();
     }
 }

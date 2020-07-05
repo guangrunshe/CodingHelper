@@ -1,6 +1,5 @@
 package cn.xunyard.idea.coding.doc.logic.maker;
 
-import cn.xunyard.idea.coding.doc.logic.DocConfig;
 import cn.xunyard.idea.coding.doc.logic.ProcessContext;
 import cn.xunyard.idea.coding.doc.logic.describer.ClassDescriber;
 import cn.xunyard.idea.coding.doc.logic.describer.MethodDescriber;
@@ -28,7 +27,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 public class MethodDescriberMaker {
-    private final Logger log = LoggerFactory.getLogger(DocConfig.IDENTITY);
+    private final Logger log = LoggerFactory.getLogger(ProcessContext.IDENTITY);
     private final ProcessContext processContext;
 
     public MethodDescriber fromJavaMethod(JavaMethod javaMethod, JavaClass javaClass) {
@@ -36,7 +35,7 @@ public class MethodDescriberMaker {
 
         if (apiOperation == null) {
             ServiceResolver.setResolveFail();
-            if (processContext.getDocConfig().getLogUnresolved()) {
+            if (processContext.getConfiguration().isLogUnresolved()) {
                 log.error("[注释缺失] 方法: " + javaClass.getName() + "#" + javaMethod.getName() + " 未找到有效注释");
             }
 
@@ -58,7 +57,7 @@ public class MethodDescriberMaker {
             String name = javaParameter.getName();
             JavaType parameterType = javaParameter.getType();
 
-            JavaClass javaClass = processContext.getSourceClassLoader().find(parameterType.toString());
+            JavaClass javaClass = processContext.getSourceClassLoader().find(parameterType);
             ClassDescriber classDescriber;
 
 

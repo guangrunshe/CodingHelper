@@ -24,6 +24,14 @@ public class ClassUtils {
         return fullPath.substring(fullPath.lastIndexOf(JAVA_SRC_ROOT) + JAVA_SRC_ROOT.length(), fullPath.lastIndexOf("/"));
     }
 
+    public static String getPackage(JavaType javaType) {
+        if (javaType instanceof JavaClass) {
+            return getPackage((JavaClass) javaType);
+        }
+
+        throw new RuntimeException("not.support");
+    }
+
     public static String getPackage(JavaClass javaClass) {
         if (javaClass.isPrimitive()) {
             return "";
@@ -42,6 +50,12 @@ public class ClassUtils {
         }
 
         return pkg.getName();
+    }
+
+    public static String getFullName(JavaType javaType) {
+        String pkg = getPackage(javaType);
+
+        return AssertUtils.isEmpty(pkg) ? getSimpleName(javaType) : pkg + "." + getSimpleName(javaType);
     }
 
     public static String getSimpleName(JavaType javaType) {

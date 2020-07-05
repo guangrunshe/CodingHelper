@@ -1,6 +1,5 @@
 package cn.xunyard.idea.coding.doc.logic.service;
 
-import cn.xunyard.idea.coding.doc.logic.DocConfig;
 import cn.xunyard.idea.coding.doc.logic.ProcessContext;
 import cn.xunyard.idea.coding.doc.logic.describer.ServiceDescriber;
 import cn.xunyard.idea.coding.log.Logger;
@@ -17,7 +16,7 @@ import java.util.List;
  * @date 2019-12-15
  */
 public class ServiceResolver {
-    private final Logger log = LoggerFactory.getLogger(DocConfig.IDENTITY);
+    private final Logger log = LoggerFactory.getLogger(ProcessContext.IDENTITY);
     private static final ThreadLocal<Boolean> RESOLVE_OK = new ThreadLocal<>();
 
     private final List<JavaClass> serviceClasses;

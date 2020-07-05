@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class ProcessContext {
-
-    private final DocConfig docConfig;
+    public static final String IDENTITY = "生成服务";
+    private final DocumentBuilderConfiguration configuration;
     private SourceClassLoader sourceClassLoader;
     private ClassDescriberMaker classDescriberMaker;
     private MethodDescriberMaker methodDescriberMaker;

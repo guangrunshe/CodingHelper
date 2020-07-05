@@ -5,6 +5,7 @@ import cn.xunyard.idea.coding.doc.logic.describer.FieldDescriber;
 import cn.xunyard.idea.coding.doc.logic.describer.ParameterDescriber;
 import lombok.RequiredArgsConstructor;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,14 +17,14 @@ import java.util.HashSet;
 @RequiredArgsConstructor
 public class ParameterRender extends AbstractClassRender {
 
-    public void renderParameter(FileWriter fileWriter, ParameterDescriber parameterDescriber) throws IOException {
+    public void renderParameter(BufferedWriter fileWriter, ParameterDescriber parameterDescriber) throws IOException {
         ClassDescriber classDescriber = parameterDescriber.getClassDescriber();
         renderClassBasic(fileWriter, classDescriber);
         renderParameterClassFields(fileWriter, classDescriber);
         renderExtendClass(fileWriter, classDescriber, new HashSet<>());
     }
 
-    protected void renderParameterClassFields(FileWriter fileWriter, ClassDescriber classDescriber) throws IOException {
+    protected void renderParameterClassFields(BufferedWriter fileWriter, ClassDescriber classDescriber) throws IOException {
         if (classDescriber.hasFields()) {
             fileWriter.write("\n参数名|必填|类型|描述|说明\n---|---|---|---|---\n");
 

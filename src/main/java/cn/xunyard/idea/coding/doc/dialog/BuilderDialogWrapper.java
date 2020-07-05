@@ -1,5 +1,6 @@
 package cn.xunyard.idea.coding.doc.dialog;
 
+import cn.xunyard.idea.coding.doc.logic.DocumentBuilderConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -13,24 +14,20 @@ import javax.swing.*;
 public class BuilderDialogWrapper extends DialogWrapper {
 
     private final Project project;
-    private BuilderTutorial buildingTutorial;
+    private final DocumentBuilderConfiguration configuration;
 
-    public BuilderDialogWrapper(Project project) {
+    public BuilderDialogWrapper(Project project, DocumentBuilderConfiguration configuration) {
         super(true);
         this.project = project;
+        this.configuration = configuration;
         init();
         setTitle("文档生成");
         this.setResizable(false);
     }
 
-    public BuilderTutorial getBuildingTutorial() {
-        return buildingTutorial;
-    }
-
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        buildingTutorial = new BuilderTutorial(project);
-        return buildingTutorial;
+        return new BuilderTutorial(project, configuration);
     }
 }

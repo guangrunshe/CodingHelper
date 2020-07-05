@@ -1,19 +1,20 @@
 package cn.xunyard.idea.coding.doc.dialog;
 
-import cn.xunyard.idea.coding.doc.logic.DocConfig;
+import cn.xunyard.idea.coding.dialog.BindingCheckBox;
+import cn.xunyard.idea.coding.dialog.BindingListWithAdd;
+import cn.xunyard.idea.coding.dialog.BindingTextField;
+import cn.xunyard.idea.coding.doc.logic.DocumentBuilderConfiguration;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.TitledSeparator;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.JBUI;
 import org.jdesktop.swingx.VerticalLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 /**
  * @author <a herf="mailto:wuqi@terminus.io">xunyard</a>
@@ -22,54 +23,16 @@ import java.util.Arrays;
 public class BuilderTutorial extends JPanel {
 
     private final Project project;
-
-    /**
-     * 文件后缀，用于区分java文件
-     */
-    private JTextField fileSuffixTextField;
-
-    /**
-     * 接口后缀，比如Facade
-     */
-    private JTextField suffixTextField;
-
-    /**
-     * 包路径匹配
-     */
-    private JTextField prefixTextField;
-
-    /**
-     * 输出服务列表
-     */
-    private JCheckBox logServiceCheckBox;
-
-    /**
-     * 输出无法解析的内容
-     */
-    private JCheckBox logUnsolvedCheckBox;
-
-    /**
-     * 文档输出目录
-     */
-    private TextFieldWithBrowseButton outputDirectoryTextWithBrowseButton;
-
-    /**
-     * 文档文件名
-     */
-    private JTextField outputFileNameTextField;
-
-    /**
-     * 允许信息缺失
-     */
-    private JCheckBox allowInfoMissingCheckBox;
+    private final DocumentBuilderConfiguration configuration;
 
     /**
      * 返回包装
      */
     private JTextArea returnPackTextArea;
 
-    public BuilderTutorial(Project project) {
+    public BuilderTutorial(Project project, DocumentBuilderConfiguration configuration) {
         this.project = project;
+        this.configuration = configuration;
         this.setLayout(new VerticalLayout());
         this.setPreferredSize(new Dimension(600, 500));
         initComponents();
@@ -80,17 +43,6 @@ public class BuilderTutorial extends JPanel {
         renderService();
         renderReturn();
         renderOutput();
-    }
-
-    public DocConfig makeBuildingContext() {
-        DocConfig docConfig = new DocConfig(suffixTextField.getText(), prefixTextField.getText(),
-                outputDirectoryTextWithBrowseButton.getText(), outputFileNameTextField.getText());
-        docConfig.setLogServiceDetail(logServiceCheckBox.isSelected());
-        docConfig.setLogUnresolved(logUnsolvedCheckBox.isSelected());
-        docConfig.setAllowInfoMissing(allowInfoMissingCheckBox.isSelected());
-        docConfig.setReturnPackList(Arrays.asList(returnPackTextArea.getText().split("\n")));
-
-        return docConfig;
     }
 
     private JPanel createContainer(String title) {
@@ -139,16 +91,18 @@ public class BuilderTutorial extends JPanel {
     }
 
     private void renderBasic() {
-        JPanel container = createContainer("\u8fd0\u884c\u57fa\u7840\u914d\u7f6e");
+        JPanel container = createContainer("运行基础配置");
         JPanel holder = createHolder(container);
 
         int index = 0;
 
-        allowInfoMissingCheckBox = new JCheckBox();
-        allowInfoMissingCheckBox.setText("\u5141\u8bb8\u4fe1\u606f\u7f3a\u5931(\u4f7f\u7528\u540d\u79f0\u4ee3\u66ff)");
-        allowInfoMissingCheckBox.setSelected(true);
-        addHolderContent(holder, allowInfoMissingCheckBox, index);
+        JCheckBox allowInfoMissingCheckBox = BindingCheckBox.BindingCheckBoxBuilder
+                .from(configuration::setAllowInfoMissing)
+                .selected(configuration.isAllowInfoMissing())
+                .text("允许信息缺失(使用名称代替)")
+                .build();
 
+        addHolderContent(holder, allowInfoMissingCheckBox, index);
         this.add(container);
     }
 
@@ -176,16 +130,21 @@ public class BuilderTutorial extends JPanel {
     }
 
     private void renderService() {
-        JPanel container = createContainer("\u670d\u52a1\u63a5\u53e3\u914d\u7f6e");
+        JPanel container = createContainer("服务接口配置");
         JPanel holder = createHolder(container);
 
         // 输出服务列表
-        logServiceCheckBox = new JCheckBox("\u8f93\u51fa\u670d\u52a1\u5217\u8868");
+        JCheckBox logServiceCheckBox = BindingCheckBox.BindingCheckBoxBuilder.from(configuration::setLogServiceDetail)
+                .selected(configuration.isLogServiceDetail())
+                .text("输出服务列表")
+                .build();
         addHolderContent(holder, logServiceCheckBox, 0);
 
         // 输出无法解析的内容
-        logUnsolvedCheckBox = new JCheckBox("\u8f93\u51fa\u65e0\u6cd5\u89e3\u6790\u7684\u5185\u5bb9(\u5efa\u8bae\u6253\u5f00)");
-        logUnsolvedCheckBox.setSelected(true);
+        JCheckBox logUnsolvedCheckBox = BindingCheckBox.BindingCheckBoxBuilder.from(configuration::setLogUnresolved)
+                .selected(configuration.isLogUnresolved())
+                .text("输出无法解析的内容(建议打开)")
+                .build();
         addHolderContent(holder, logUnsolvedCheckBox, 1);
 
         {
@@ -194,23 +153,32 @@ public class BuilderTutorial extends JPanel {
             JPanel groupPanel = new JPanel(gridBagLayout);
 
             // 文件后缀
-            fileSuffixTextField = createDisableTextField(".java");
+            JTextField fileSuffixTextField = BindingTextField.BindingTextFieldBuilder.from(configuration::setFileSuffix)
+                    .enable(false)
+                    .text(configuration.getFileSuffix())
+                    .build();
 
-            JCheckBox fileSuffixCheckBox = new JCheckBox("\u590d\u5199");
+            JCheckBox fileSuffixCheckBox = new JCheckBox("复写");
             fileSuffixCheckBox.setEnabled(false);
-            addLineContent("\u6587\u4ef6\u540e\u7f00", fileSuffixTextField, fileSuffixCheckBox, groupPanel, 0);
+            addLineContent("文件后缀", fileSuffixTextField, fileSuffixCheckBox, groupPanel, 0);
 
             // 接口后缀匹配
-            suffixTextField = createDisableTextField("Facade");
+            JTextField suffixTextField = BindingTextField.BindingTextFieldBuilder.from(configuration::setServiceSuffix)
+                    .enable(false)
+                    .text(configuration.getServiceSuffix())
+                    .build();
 
-            JCheckBox suffixCheckBox = new JCheckBox("\u590d\u5199");
-            addLineContent("\u63a5\u53e3\u540e\u7f00\u5339\u914d", suffixTextField, suffixCheckBox, groupPanel, 1);
+            JCheckBox suffixCheckBox = new JCheckBox("复写");
+            addLineContent("接口后缀匹配", suffixTextField, suffixCheckBox, groupPanel, 1);
 
             // 包路径前缀匹配
-            prefixTextField = createDisableTextField(null);
+            JTextField prefixTextField = BindingTextField.BindingTextFieldBuilder.from(configuration::setPackagePrefix)
+                    .enable(false)
+                    .text(configuration.getPackagePrefix())
+                    .build();
 
-            JCheckBox prefixCheckBox = new JCheckBox("\u590d\u5199");
-            addLineContent("\u5305\u8def\u5f84\u524d\u7f00\u5339\u914d", prefixTextField, prefixCheckBox,
+            JCheckBox prefixCheckBox = new JCheckBox("复写");
+            addLineContent("包路径前缀匹配", prefixTextField, prefixCheckBox,
                     groupPanel, 2);
 
             addHolderContent(holder, groupPanel, 2);
@@ -220,22 +188,29 @@ public class BuilderTutorial extends JPanel {
     }
 
     private void renderReturn() {
-        JPanel container = createContainer("\u8fd4\u56de\u5305\u88c5\u914d\u7f6e");
+        JPanel container = createContainer("源代码路径配置");
         JPanel holder = createHolder(container);
 
-        JScrollPane scrollPane = new JBScrollPane();
-        scrollPane.setPreferredSize(new Dimension(19, 86));
-        scrollPane.setMaximumSize(new Dimension(560, 86));
-        returnPackTextArea = new JTextArea("java.util.List");
-        scrollPane.setViewportView(returnPackTextArea);
+        BindingListWithAdd<String> bindingListWithAdd = BindingListWithAdd.BindingListWithAddBuilder
+                .from(configuration::setSourceInclude)
+                .init(configuration.getSourceInclude())
+                .build();
+        bindingListWithAdd.setAddActionListener(e -> {
+            VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+                    project, null);
 
-        addHolderContent(holder, scrollPane, 0);
+            if (virtualFile != null) {
+                bindingListWithAdd.addData(virtualFile.getPath());
+            }
+        });
 
+        bindingListWithAdd.setPreferredSize(new Dimension(560, 86));
+        addHolderContent(holder, bindingListWithAdd, 0);
         this.add(container);
     }
 
     private void renderOutput() {
-        JPanel container = createContainer("\u6587\u4ef6\u8f93\u51fa\u914d\u7f6e");
+        JPanel container = createContainer("文件输出配置");
         JPanel holder = createHolder(container);
 
         {
@@ -244,35 +219,39 @@ public class BuilderTutorial extends JPanel {
             JPanel groupPanel = new JPanel(gridBagLayout);
 
             // json文件名
-            JTextField jsonFileNameTextField = createDisableTextField("\u6b64\u529f\u80fd\u6682\u4e0d\u53ef\u7528");
+            JTextField jsonFileNameTextField = createDisableTextField("此功能暂不可用");
 
-            JCheckBox jsonFileNameCheckBox = new JCheckBox("\u590d\u5199");
+            JCheckBox jsonFileNameCheckBox = new JCheckBox("复写");
             jsonFileNameCheckBox.setEnabled(false);
-            addLineContent("json\u6587\u4ef6\u540d", jsonFileNameTextField, jsonFileNameCheckBox, groupPanel, 0);
+            addLineContent("json文件名", jsonFileNameTextField, jsonFileNameCheckBox, groupPanel, 0);
 
             // 文件名
-            outputFileNameTextField = createDisableTextField("document.md");
+            JTextField outputFileNameTextField = BindingTextField.BindingTextFieldBuilder.from(configuration::setOutputFileName)
+                    .text(configuration.getOutputFileName())
+                    .enable(false)
+                    .build();
 
-            JCheckBox outputFileNameCheckBox = new JCheckBox("\u590d\u5199");
-            addLineContent("\u6587\u6863\u6587\u4ef6\u540d", outputFileNameTextField, outputFileNameCheckBox,
+            JCheckBox outputFileNameCheckBox = new JCheckBox("复写");
+            addLineContent("文档文件名", outputFileNameTextField, outputFileNameCheckBox,
                     groupPanel, 1);
 
             // 文档输出路径
-            outputDirectoryTextWithBrowseButton = new TextFieldWithBrowseButton();
+            TextFieldWithBrowseButton outputDirectoryTextWithBrowseButton = new TextFieldWithBrowseButton();
             outputDirectoryTextWithBrowseButton.setEnabled(false);
-            outputDirectoryTextWithBrowseButton.setText("/tmp");
+            outputDirectoryTextWithBrowseButton.setText(configuration.getOutputDirectory());
             outputDirectoryTextWithBrowseButton.addActionListener(e -> {
                 VirtualFile virtualFile = FileChooser.chooseFile(FileChooserDescriptorFactory.createSingleFolderDescriptor(),
                         project, null);
 
                 if (virtualFile != null) {
                     outputDirectoryTextWithBrowseButton.setText(virtualFile.getPath());
+                    configuration.setOutputDirectory(virtualFile.getPath());
                 }
             });
 
-            JCheckBox outputDirectoryCheckBox = new JCheckBox("\u590d\u5199");
+            JCheckBox outputDirectoryCheckBox = new JCheckBox("复写");
 
-            addLineContent("\u6587\u6863\u8f93\u51fa\u8def\u5f84", outputDirectoryTextWithBrowseButton, outputDirectoryCheckBox,
+            addLineContent("文档输出路径", outputDirectoryTextWithBrowseButton, outputDirectoryCheckBox,
                     groupPanel, 2);
 
             addHolderContent(holder, groupPanel, 0);

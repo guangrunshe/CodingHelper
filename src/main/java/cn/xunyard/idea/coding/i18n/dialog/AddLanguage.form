@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="cn.xunyard.idea.coding.i18n.dialog.AddLanguage">
+  <grid id="27dc6" binding="wholePanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+    <constraints>
+      <xy x="20" y="20" width="780" height="42"/>
+    </constraints>
+    <properties>
+      <maximumSize width="780" height="35"/>
+      <minimumSize width="780" height="35"/>
+      <preferredSize width="780" height="35"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="cd04e" class="javax.swing.JLabel">
+        <constraints/>
+        <properties>
+          <text value="语言描述:"/>
+        </properties>
+      </component>
+      <component id="3af92" class="javax.swing.JTextField" binding="languageTextField">
+        <constraints/>
+        <properties>
+          <minimumSize width="80" height="27"/>
+          <opaque value="false"/>
+          <preferredSize width="80" height="27"/>
+        </properties>
+      </component>
+      <component id="9f5a6" class="javax.swing.JLabel">
+        <constraints/>
+        <properties>
+          <text value="翻译文件:"/>
+        </properties>
+      </component>
+      <component id="8bb70" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="filepathBrowseButton">
+        <constraints/>
+        <properties>
+          <preferredSize width="550" height="30"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
